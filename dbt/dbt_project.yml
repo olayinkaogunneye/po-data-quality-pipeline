@@ -14,7 +14,7 @@ models:
   po_quality:
     staging:
       +materialized: view
-      +schema: SILVER
+      +schema: STAGING
     quarantine:
       +materialized: table
       +schema: QUARANTINE
@@ -24,3 +24,14 @@ models:
     gold:
       +materialized: table
       +schema: GOLD
+    evaluation:
+      +materialized: table
+      +schema: EVALUATION
+    monitoring:
+      +materialized: view
+      +schema: MONITORING
+
+data_tests:
+  +severity: warn
+  +store_failures: true
+  +schema: TEST_FAILURES

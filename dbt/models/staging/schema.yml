@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: stg_suppliers
+    description: Suppliers with proper types. One row per supplier record (may include near-duplicate names).
+    columns:
+      - name: supplier_id
+        description: Supplier code, e.g. S001.
+        data_tests:
+          - not_null
+          - unique
+      - name: country
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['CZ', 'DE', 'PL', 'SK', 'AT', 'NL', 'US']
+      - name: payment_terms
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['NET30', 'NET45', 'NET60']
+
+  - name: stg_po_headers
+    description: Purchase order headers with proper types. Duplicates and bad values are still present.
+    columns:
+      - name: po_id
+        description: Purchase order number. Should be unique.
+        data_tests:
+          - not_null
+          - unique
+      - name: supplier_id
+        description: Must exist in stg_suppliers.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_suppliers')
+                field: supplier_id
+      - name: order_date
+        description: Parsed from YYYY-MM-DD. NULL means missing or wrongly formatted (see order_date_raw).
+        data_tests:
+          - not_null
+      - name: currency
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['EUR', 'USD']
+
+  - name: stg_po_items
+    description: Purchase order lines with proper types.
+    columns:
+      - name: po_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_po_headers')
+                field: po_id
+      - name: description
+        data_tests:
+          - not_null
+      - name: quantity
+        data_tests:
+          - not_null

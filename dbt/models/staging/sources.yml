@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: Raw purchase order data exactly as loaded from the CSVs (all columns are text).
+    database: PO_QUALITY
+    schema: BRONZE
+    tables:
+      - name: suppliers_raw
+        description: Supplier master data, one row per supplier.
+      - name: po_headers_raw
+        description: Purchase order headers, one row per PO (may contain duplicates).
+      - name: po_items_raw
+        description: Purchase order lines, one row per PO line.
+      - name: corruption_log
+        description: Answer key. One row per problem injected by the data generator. Evaluation only, never a pipeline input.

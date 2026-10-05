@@ -1,0 +1,59 @@
+version: 2
+
+# Silver is the trusted layer, so these tests FAIL the build (severity: error)
+# instead of just warning like the staging tests.
+models:
+  - name: silver_suppliers
+    columns:
+      - name: supplier_id
+        data_tests:
+          - unique:
+              config: {severity: error}
+          - not_null:
+              config: {severity: error}
+
+  - name: silver_po_headers
+    columns:
+      - name: po_id
+        data_tests:
+          - unique:
+              config: {severity: error}
+          - not_null:
+              config: {severity: error}
+      - name: supplier_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('silver_suppliers')
+                field: supplier_id
+              config: {severity: error}
+      - name: order_date
+        data_tests:
+          - not_null:
+              config: {severity: error}
+      - name: currency
+        data_tests:
+          - not_null:
+              config: {severity: error}
+          - accepted_values:
+              arguments:
+                values: ['EUR', 'USD']
+              config: {severity: error}
+
+  - name: silver_po_items
+    columns:
+      - name: po_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('silver_po_headers')
+                field: po_id
+              config: {severity: error}
+      - name: description
+        data_tests:
+          - not_null:
+              config: {severity: error}
+      - name: quantity
+        data_tests:
+          - not_null:
+              config: {severity: error}
