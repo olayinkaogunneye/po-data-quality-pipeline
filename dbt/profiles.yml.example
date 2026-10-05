@@ -1,0 +1,15 @@
+# Copy to ~/.dbt/profiles.yml (outside the repo) and fill in via environment variables.
+# NEVER commit real credentials.
+po_quality:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'ACCOUNTADMIN') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      database: PO_QUALITY
+      schema: SILVER
+      threads: 4

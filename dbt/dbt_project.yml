@@ -1,0 +1,26 @@
+name: 'po_quality'
+version: '1.0.0'
+config-version: 2
+
+profile: 'po_quality'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  po_quality:
+    staging:
+      +materialized: view
+      +schema: SILVER
+    quarantine:
+      +materialized: table
+      +schema: QUARANTINE
+    silver:
+      +materialized: table
+      +schema: SILVER
+    gold:
+      +materialized: table
+      +schema: GOLD
